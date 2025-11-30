@@ -84,8 +84,8 @@ This method sets up the database, backend, and frontend automatically.
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/ats-resume-optimizer.git
-   cd ats-resume-optimizer
+   git clone https://github.com/Co-vengers/ATS-Optimizer
+   cd ATS-Optimizer
    ```
 
 2. **Create `.env` file** in the root:
