@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # 1. Database Service
+  db:
+    image: mysql:8.0
+    container_name: ats_db_container
+    restart: always
+    environment:
+      MYSQL_DATABASE: ats
+      MYSQL_ROOT_PASSWORD: Vyom2004r
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    # NEW: Healthcheck ensures DB is ready before Backend starts
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pVyom2004r"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. Backend Service (Django)
+  backend:
+    build: ./Backend
+    container_name: ats_backend
+    # Updated command to automatically run migrations before starting the server
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./Backend:/app
+      - ./Backend/media:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy # NEW: Wait for the healthcheck to pass
+    environment:
+      - DB_HOST=db
+      - DB_NAME=ats
+      - DB_USER=root
+      - DB_PASSWORD=Vyom2004r
+      - DB_PORT=3306
+
+  # 3. Frontend Service (React)
+  frontend:
+    build: ./frontend
+    container_name: ats_frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
