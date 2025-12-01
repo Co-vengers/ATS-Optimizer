@@ -84,7 +84,7 @@ const ResumeAnalyzer = ({ user }) => {
     }, 300);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/calculate-score/', {
+      const response = await fetch('http://136.119.223.185:8000/api/calculate-score/', {
         method: 'POST',
         body: formData,
       });
