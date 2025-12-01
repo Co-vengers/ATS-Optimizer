@@ -41,6 +41,7 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=Vyom2004r
       - DB_PORT=5432
+      - PYTHONDONTWRITEBYTECODE=1
 
   # 3. Frontend Service (React)
   frontend:
